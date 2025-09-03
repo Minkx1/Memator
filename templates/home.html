@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Мемасікі</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        h1 { text-align: center; }
+        .search-box { text-align: center; margin-bottom: 20px; }
+        .meme {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            border: 1px solid #ddd;
+            padding: 10px;
+            border-radius: 8px;
+        }
+        .meme img {
+            max-width: 150px;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+        .meme-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Мемчики Топоркова</h1>
+    <p style="text-align:center;">Вітаю! Мемчики Топоркова - це сайт-бібліотека, що увібрала в сеье смішні мемчики. </p>
+
+    <div class="search-box">
+        <form method="get">
+            <input type="text" name="q" placeholder="Пошук..." value="{{ query }}">
+            <button type="submit">Знайти</button>
+        </form>
+    </div>
+
+    <div class="memes">
+        {% for meme in memes %}
+        <div class="meme">
+            <img src="{{ url_for('static', filename='memes/' + meme.filename) }}" alt="{{ meme.title }}">
+            <div class="meme-title">{{ meme.title }}</div>
+        </div>
+        {% else %}
+        <p>Нічого не знайдено 😿</p>
+        {% endfor %}
+    </div>
+</body>
+</html>

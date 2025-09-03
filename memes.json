@@ -1,0 +1,42 @@
+[
+  {
+    "filename": "cat_cowboy.jpg",
+    "title": "Кіт-Ковбой",
+    "tags": [
+      "кіт",
+      "ковбой",
+      "western"
+    ]
+  },
+  {
+    "filename": "dog_programmer.jpg",
+    "title": "Пес-Програміст",
+    "tags": [
+      "пес",
+      "програміст",
+      "it"
+    ]
+  },
+  {
+    "filename": "pepe.jpg",
+    "title": "Пепе Сумний",
+    "tags": [
+      "жаба",
+      "pepe",
+      "sad"
+    ]
+  },
+  {
+    "filename": "kozak.jpg",
+    "title": "Козак з вподобайкою",
+    "tags": [
+      "козак",
+      "вподобайка",
+      "лайк",
+      "козак вподобайка",
+      "козак лайк",
+      "like",
+      "kozak like"
+    ]
+  }
+]
