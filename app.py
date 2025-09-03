@@ -5,7 +5,7 @@ app = flask.Flask(__name__)
 
 app.secret_key = "super-secret-key"  # потрібен для flash-повідомлень
 
-ADMIN_PASSWORD = "toporkov+rust=<3"  # зміни на свій пароль
+ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD")  # зміни на свій пароль
 MEMES_FILE = "memes.json"
 UPLOAD_FOLDER = "static/memes/"
 
