@@ -28,7 +28,7 @@ def home():
     if query:
         for m in memes:
             for tag in m['tags']:
-                if any(query in tag):
+                if query in tag:
                     filtered.append(m) # adds to $filtered$ memes that in tags have query
                     break
     else:
