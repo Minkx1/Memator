@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <title>Мематор — Адмін панель</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(180deg, #0f172a, #1e293b);
+            color: #f1f5f9;
+            min-height: 100vh;
+        }
+
+        header {
+            padding: 20px;
+            background: #1e293b;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            text-align: center;
+        }
+
+        header h1 {
+            margin: 0;
+            font-size: 28px;
+            color: #38bdf8;
+        }
+
+        header p {
+            margin-top: 5px;
+            font-size: 14px;
+            color: #94a3b8;
+        }
+
+        .form-box {
+            max-width: 500px;
+            margin: 40px auto;
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+        }
+
+        .form-box h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #38bdf8;
+        }
+
+        .form-box input {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 15px;
+            border-radius: 12px;
+            border: none;
+            font-size: 16px;
+            outline: none;
+            background: #0f172a;
+            color: #f1f5f9;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.5);
+        }
+
+        .form-box button {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 12px;
+            background: #38bdf8;
+            color: #0f172a;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .form-box button:hover {
+            background: #0ea5e9;
+        }
+
+        .flash {
+            text-align: center;
+            margin: 10px;
+            padding: 10px;
+            border-radius: 10px;
+            background: rgba(255, 0, 0, 0.2);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Мематор</h1>
+        <p><b>Адмін панель — додавання мемів</b></p>
+    </header>
+
+    <div class="form-box">
+        <h2>Додати мем</h2>
+        <form method="post" enctype="multipart/form-data">
+            <input type="password" name="password" placeholder="Пароль" required>
+            <input type="text" name="title" placeholder="Назва мему" required>
+            <input type="text" name="tags" placeholder="Теги (через кому)" required>
+            <input type="file" name="file" required>
+            <button type="submit">Завантажити</button>
+        </form>
+    </div>
+</body>
+</html>
