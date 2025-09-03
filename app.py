@@ -1,4 +1,4 @@
-import flask, json
+import flask, json, os
 
 # Start initialization
 app = flask.Flask(__name__)
@@ -54,7 +54,6 @@ def admin():
 
         # Збереження картинки
         filename = file.filename
-        import os
         file.save(os.path.join(UPLOAD_FOLDER, filename))
 
         # Додаємо новий мем у JSON
@@ -72,4 +71,5 @@ def admin():
     return flask.render_template("admin.html")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    port = int(os.environ.get("PORT", 5000))  # Render передає порт у змінній PORT
+    app.run(host="0.0.0.0", port=port)
