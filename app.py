@@ -1,13 +1,21 @@
-import flask, json
+import flask, json, os
+import easywebdav
+
 
 # Start initialization
 app = flask.Flask(__name__)
 
 app.secret_key = "super-secret-key"  # потрібен для flash-повідомлень
 
-ADMIN_PASSWORD = "toporkov+rust=<3"  # зміни на свій пароль
+ADMIN_PASSWORD = "toporkov+rust=<3"  
 MEMES_FILE = "memes.json"
-UPLOAD_FOLDER = "static/memes/"
+# Конфігурація WebDAV для Proton Drive
+webdav = easywebdav.connect(
+    host='webdav.proton.me',
+    username=os.environ.get("PROTON_USER"),
+    password=os.environ.get("PROTON_PASS"),
+    protocol='https'
+)
 
 # dictionaries for initialization meme imgs in system
 def load_memes():
@@ -28,7 +36,7 @@ def home():
     if query:
         for m in memes:
             for tag in m['tags']:
-                if any(query in tag):
+                if query in tag:
                     filtered.append(m) # adds to $filtered$ memes that in tags have query
                     break
     else:
@@ -52,16 +60,20 @@ def admin():
             flask.flash("❌ Не вибрано файл!")
             return flask.redirect(flask.url_for("admin"))
 
-        # Збереження картинки
-        filename = file.filename
-        import os
-        file.save(os.path.join(UPLOAD_FOLDER, filename))
+        # Завантаження на Proton Drive через WebDAV
+        remote_path = f"/memes/{file.filename}"  # шлях у Proton Drive
+        file.save(file.filename)  # тимчасово зберігаємо локально
+        webdav.upload(file.filename, remote_path)
+        os.remove(file.filename)  # видаляємо локальний файл
+
+        # Формування публічного URL (в залежності від налаштувань Proton Drive)
+        url = f"https://drive.proton.me/remote.php/webdav/memes/{file.filename}"
 
         # Додаємо новий мем у JSON
         memes = load_memes()
         memes.append({
             "title": title,
-            "filename": filename,
+            "filename": url,
             "tags": [t.strip().lower() for t in tags if t.strip()]
         })
         save_memes(memes)
@@ -70,6 +82,7 @@ def admin():
         return flask.redirect(flask.url_for("home"))
 
     return flask.render_template("admin.html")
+
 
 if __name__ == "__main__":
     app.run(debug=True)

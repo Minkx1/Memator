@@ -124,7 +124,7 @@
     <div class="memes">
         {% for meme in memes %}
         <div class="meme">
-            <img src="{{ url_for('static', filename='memes/' + meme.filename) }}" alt="{{ meme.title }}">
+            <img src="{{ meme.filename }}" alt="{{ meme.title }}">
             <div class="meme-title">{{ meme.title }}</div>
         </div>
         {% else %}
