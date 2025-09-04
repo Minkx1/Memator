@@ -1,6 +1,8 @@
 import flask, json, os, hashlib
 import rapidfuzz.fuzz
 
+# some shit for commit?
+
 # --- Config ---
 MEMES_FILE = "memes.json"
 UPLOAD_FOLDER = "static/memes"
