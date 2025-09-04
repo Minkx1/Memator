@@ -1,8 +1,6 @@
 import flask, json, os, hashlib
 import rapidfuzz.fuzz
 
-# some shit for commit?
-
 # --- Config ---
 MEMES_FILE = "memes.json"
 UPLOAD_FOLDER = "static/memes"
@@ -42,6 +40,9 @@ def get_memes():
     }
 
     for meme in MEMES:
+        if not meme.get("visible", True):
+            continue
+        
         if len(query) == 0:
             if meme["filename"] not in seen:
                 result["result"].append({
@@ -79,6 +80,7 @@ def admin():
 
 @app.route("/admin/add", methods=["GET", "POST"])
 def admin_add():
+    global MEMES
     if flask.request.method == "POST":
         password = flask.request.form.get("password")
         title = flask.request.form.get("title")
@@ -106,6 +108,7 @@ def admin_add():
             "visible": True
         })
         save_memes(memes)
+        MEMES[:] = load_memes()
 
         flask.flash("✅ Мем успішно додано!")
         return flask.redirect(flask.url_for("home"))
@@ -114,22 +117,22 @@ def admin_add():
 
 @app.route("/admin/manage", methods=["GET", "POST"])
 def admin_manage():
+    global MEMES
     memes = load_memes()
 
     if flask.request.method == "POST":
         password = flask.request.form.get("password")
 
-        # Перевірка пароля
         if encode(password) != ADMIN_PASSWORD:
             flask.flash("❌ Невірний пароль!")
             return flask.redirect(flask.url_for("admin_manage"))
 
-        # Оновлюємо видимість мемів
         for m in memes:
             checkbox_name = f"visible_{m['filename']}"
             m["visible"] = checkbox_name in flask.request.form
 
         save_memes(memes)
+        MEMES[:] = load_memes()
         flask.flash("✅ Налаштування мемів оновлено!")
         return flask.redirect(flask.url_for("admin_manage"))
 
