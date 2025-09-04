@@ -1,4 +1,5 @@
 import flask, json, os, hashlib
+import rapidfuzz.fuzz
 
 # --- Config ---
 MEMES_FILE = "memes.json"
@@ -22,24 +23,52 @@ def save_memes(memes):
     with open(MEMES_FILE, "w", encoding="utf-8") as f:
         json.dump(memes, f, ensure_ascii=False, indent=4)
 
+MEMES = load_memes() # Глобально кешуємо
 # --- Routes ---
 @app.route("/", methods=["GET", "POST"])
 def home():
-    memes = load_memes()
-    query = ""
+    return flask.render_template("home.html")
+@app.route("/api/get_memes", methods=["GET"])
+def get_memes():
+    query = flask.request.args.get("query", "").strip().lower()
 
-    if flask.request.method == "POST": query = flask.request.form.get("search", "").lower()
-    else: query = flask.request.args.get("search", "").lower()
+    seen = set()
+    result = {
+        "ok": True,
+        "result": []
+    }
 
-    if query:
-        memes = [
-            m for m in memes
-            if m.get("visible", True) and (query in m["title"].lower() or any(query in tag for tag in m["tags"]))
-        ]
-    else:
-        memes = [m for m in memes if m.get("visible", True)]
+    for meme in MEMES:
+        if len(query) == 0:
+            if meme["filename"] not in seen:
+                result["result"].append({
+                    "filename": meme["filename"],
+                    "title": meme["title"],
+                    "url": f"/{UPLOAD_FOLDER}/{meme['filename']}",
+                    "tags": meme["tags"],
+                })
+                seen.add(meme["filename"])
+            continue
 
-    return flask.render_template("home.html", memes=memes, query=query)
+        match = False
+        if rapidfuzz.fuzz.ratio(query, meme["title"]) >= 80. or query in meme["title"].lower():
+            match = True
+
+        for tag in meme["tags"]:
+            if rapidfuzz.fuzz.ratio(query, tag) >= 80. or query in tag:
+                match = True
+                break
+
+        if match and meme["filename"] not in seen:
+            result["result"].append({
+                "filename": meme["filename"],
+                "title": meme["title"],
+                "url": f"/{UPLOAD_FOLDER}/{meme['filename']}",
+                "tags": meme["tags"],
+            })
+            seen.add(meme["filename"])
+
+    return flask.jsonify(result)
 
 @app.route("/admin")
 def admin():
@@ -97,4 +126,4 @@ def admin_manage():
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
-    app.run(debug=True, host="0.0.0.0", port=port)
+    app.run(debug="DEBUG" in os.environ.keys(), host="0.0.0.0", port=port)

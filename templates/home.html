@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <meta charset="UTF-8">
-    <title>Мематор</title>
+    <meta charset="UTF-8" />
+    <title>Мематор (AJAX)</title>
     <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
     <style>
+        /* --- збережений стиль, трохи підправив для динаміки --- */
         body {
             margin: 0;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -33,9 +35,10 @@
         .search-box {
             display: flex;
             justify-content: center;
-            margin: 25px auto;
-            max-width: 600px;
+            margin: 20px auto;
+            max-width: 760px;
             padding: 0 15px;
+            gap: 10px;
         }
         .search-box form {
             display: flex;
@@ -73,6 +76,7 @@
             background: #0ea5e9;
             transform: scale(1.05);
         }
+
         .memes {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
@@ -85,9 +89,11 @@
             overflow: hidden;
             box-shadow: 0 4px 12px rgba(0,0,0,0.5);
             transition: transform 0.3s, box-shadow 0.3s;
-            animation: fadeIn 0.6s ease;
+            animation: fadeIn 0.45s ease;
             position: relative;
             cursor: pointer;
+            display: flex;
+            flex-direction: column;
         }
         .meme:hover {
             transform: translateY(-6px) scale(1.02);
@@ -96,6 +102,8 @@
         .meme img {
             width: 100%;
             display: block;
+            object-fit: cover;
+            height: 180px;
         }
         .meme-title {
             padding: 12px;
@@ -122,7 +130,7 @@
             flex-wrap: wrap;
             gap: 6px;
             justify-content: center;
-            padding: 0 0 12px;
+            padding: 0 12px 12px;
         }
         .tag {
             background: #0ea5e9;
@@ -131,20 +139,31 @@
             font-weight: bold;
             padding: 4px 10px;
             border-radius: 20px;
+            cursor: pointer;
+            user-select: none;
         }
         .empty {
             text-align: center;
             color: #94a3b8;
             font-size: 18px;
             margin-top: 40px;
+            grid-column: 1/-1;
+        }
+        .loading {
+            text-align: center;
+            color: #94a3b8;
+            font-size: 16px;
+            margin: 10px 0 0;
+            grid-column: 1/-1;
         }
         @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
+            from { opacity: 0; transform: scale(0.98); }
             to { opacity: 1; transform: scale(1); }
         }
         @media (max-width: 600px) {
             .search-box form { flex-direction: column; }
             .search-box button { width: 100%; }
+            .meme img { height: 140px; }
         }
     </style>
 </head>
@@ -157,32 +176,167 @@
     </header>
 
     <div class="search-box">
-        <form method="post">
-            <input type="text" name="search" placeholder="Шукати меми..." value="{{ query }}">
+        <form id="searchForm" autocomplete="off">
+            <input id="searchInput" type="text" name="search" placeholder="Шукати меми або теги (натисни Enter)..." value="{{ query }}">
             <button type="submit">🔍 Знайти</button>
         </form>
     </div>
 
-    <div class="memes">
-        {% for meme in memes %}
-        <div class="meme">
-            <img src="{{ url_for('static', filename='memes/' + meme.filename) }}" alt="{{ meme.title }}">
-            <div class="meme-title">
-                {{ meme.title }}
-                <a href="{{ url_for('static', filename='memes/' + meme.filename) }}" download class="download-btn">⤓</a>
-            </div>
-            {% if meme.tags %}
-            <div class="meme-tags">
-                {% for tag in meme.tags %}
-                <span class="tag">#{{ tag }}</span>
-                {% endfor %}
-            </div>
-            {% endif %}
-        </div>
-        {% else %}
-        <p class="empty">Нічого не знайдено 😿</p>
-        {% endfor %}
+    <div id="memesContainer" class="memes" aria-live="polite">
+        <!-- меми вставляються сюди JS-ом -->
     </div>
 
-    </body>
+    <script>
+        (function () {
+            const apiBase = '/api/get_memes'; // endpoint (відправляємо ?query=...)
+            const container = document.getElementById('memesContainer');
+            const form = document.getElementById('searchForm');
+            const input = document.getElementById('searchInput');
+
+            let lastQuery = '';
+            let debounceTimer = null;
+
+            function renderMemes(list) {
+                container.innerHTML = ''; // очистити
+                if (!Array.isArray(list) || list.length === 0) {
+                    const p = document.createElement('p');
+                    p.className = 'empty';
+                    p.textContent = 'Нічого не знайдено 😿';
+                    container.appendChild(p);
+                    return;
+                }
+
+                for (const m of list) {
+                    const card = document.createElement('div');
+                    card.className = 'meme';
+
+                    const img = document.createElement('img');
+                    img.src = m.url || (`/static/memes/${m.filename}`);
+                    img.alt = m.title || m.filename || '';
+
+                    const title = document.createElement('div');
+                    title.className = 'meme-title';
+                    title.textContent = m.title || m.filename || '';
+
+                    const dl = document.createElement('a');
+                    dl.className = 'download-btn';
+                    dl.href = img.src;
+                    dl.download = m.filename || '';
+                    dl.title = 'Завантажити';
+                    dl.textContent = '⤓';
+                    title.appendChild(dl);
+
+                    card.appendChild(img);
+                    card.appendChild(title);
+
+                    if (m.tags && m.tags.length) {
+                        const tagsWrap = document.createElement('div');
+                        tagsWrap.className = 'meme-tags';
+                        for (const t of m.tags) {
+                            const span = document.createElement('span');
+                            span.className = 'tag';
+                            span.textContent = '#' + t;
+                            // клік по тегу — підставляє в інпут і запускає пошук
+                            span.addEventListener('click', (ev) => {
+                                ev.stopPropagation();
+                                input.focus();
+                                // підставимо тег без "#"
+                                const plain = t;
+                                input.value = plain;
+                                triggerSearch();
+                            });
+                            tagsWrap.appendChild(span);
+                        }
+                        card.appendChild(tagsWrap);
+                    }
+
+                    // клік по карточці — відкриває картинку в новому вікні
+                    card.addEventListener('click', () => {
+                        window.open(img.src, '_blank');
+                    });
+
+                    container.appendChild(card);
+                }
+            }
+
+            function showLoading() {
+                container.innerHTML = '';
+                const d = document.createElement('div');
+                d.className = 'loading';
+                d.textContent = 'Завантаження...';
+                container.appendChild(d);
+            }
+
+            function fetchMemes(query = '') {
+                // вибираємо формát GET ?query=... (сервер має підтримати)
+                const url = apiBase + (query ? ('?query=' + encodeURIComponent(query)) : '');
+                showLoading();
+                return fetch(url, { credentials: 'same-origin' })
+                    .then(res => {
+                        if (!res.ok) throw new Error('HTTP ' + res.status);
+                        return res.json();
+                    })
+                    .then(json => {
+                        // підтримка двох форматів: {"ok":true,"result":[...]} або {"ok":true,"results":[...]}
+                        const arr = (json && (json.result || json.results || json.data)) || [];
+                        return arr;
+                    })
+                    .catch(err => {
+                        console.error('fetchMemes error', err);
+                        container.innerHTML = '';
+                        const p = document.createElement('p');
+                        p.className = 'empty';
+                        p.textContent = 'Помилка при завантаженні мемів.';
+                        container.appendChild(p);
+                        return [];
+                    });
+            }
+
+            // тригер пошуку (вирішує, чи робити запит)
+            function triggerSearch() {
+                const q = (input.value || '').trim();
+                // якщо запит такий самий як останній — не робити
+                if (q === lastQuery) return;
+                lastQuery = q;
+                fetchMemes(q).then(list => renderMemes(list));
+            }
+
+            // debounce при наборі
+            input.addEventListener('input', () => {
+                // ПРОПИСАНО: коли вводиш в поле — теги в карточках ховаються автоматично
+                const tags = document.querySelectorAll('.meme-tags');
+                if (input.value.trim().length > 0) {
+                    tags.forEach(t => t.style.display = 'none');
+                } else {
+                    tags.forEach(t => t.style.display = '');
+                }
+
+                if (debounceTimer) clearTimeout(debounceTimer);
+                debounceTimer = setTimeout(() => {
+                    triggerSearch();
+                }, 300);
+            });
+
+            // сабміт (Enter або кнопка)
+            form.addEventListener('submit', (ev) => {
+                ev.preventDefault();
+                if (debounceTimer) clearTimeout(debounceTimer);
+                triggerSearch();
+            });
+
+            // initial load
+            document.addEventListener('DOMContentLoaded', () => {
+                // якщо в шаблоні є початковий запит ({{ query }}), використаємо його
+                const initial = (input.value || '').trim();
+                lastQuery = initial;
+                fetchMemes(initial).then(list => renderMemes(list));
+            });
+
+            // корисна функція для зовнішнього виклику
+            window.Memator = {
+                refresh: () => fetchMemes(input.value.trim()).then(l => renderMemes(l))
+            };
+        })();
+    </script>
+</body>
 </html>
