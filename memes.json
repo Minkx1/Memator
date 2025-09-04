@@ -160,5 +160,17 @@
             "dog"
         ],
         "visible": false
+    },
+    {
+        "title": "😉",
+        "filename": "faces_on_smth.jpg",
+        "tags": [
+            "морг",
+            "лице",
+            "лиця",
+            "faces",
+            "face"
+        ],
+        "visible": true
     }
 ]

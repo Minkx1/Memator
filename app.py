@@ -85,10 +85,18 @@ def admin_manage():
     memes = load_memes()
 
     if flask.request.method == "POST":
-        # Отримуємо всі видимі меми
-        visible_ids = flask.request.form.getlist("visible")  # список filename мемів, які залишаються видимими
+        password = flask.request.form.get("password")
+
+        # Перевірка пароля
+        if encode(password) != ADMIN_PASSWORD:
+            flask.flash("❌ Невірний пароль!")
+            return flask.redirect(flask.url_for("admin_manage"))
+
+        # Оновлюємо видимість мемів
         for m in memes:
-            m["visible"] = m["filename"] in visible_ids
+            checkbox_name = f"visible_{m['filename']}"
+            m["visible"] = checkbox_name in flask.request.form
+
         save_memes(memes)
         flask.flash("✅ Налаштування мемів оновлено!")
         return flask.redirect(flask.url_for("admin_manage"))
