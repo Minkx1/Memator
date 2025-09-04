@@ -1,11 +1,14 @@
-import flask, json, os
+import flask, json, os, hashlib
 
 # Start initialization
 app = flask.Flask(__name__)
 
 app.secret_key = "super-secret-key"  # потрібен для flash-повідомлень
 
-ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD", "toporkov")
+def encode(password: str) -> str:
+    return hashlib.sha256(password.encode()).hexdigest()
+
+ADMIN_PASSWORD = "4a58953f9be61a1b54ff79b686507c308df4de956ab7b46e63d2d373ade79d8e" or encode(os.environ.get("ADMIN_PASSWORD"))
 MEMES_FILE = "memes.json"
 UPLOAD_FOLDER = "static/memes/"
 
@@ -44,7 +47,7 @@ def admin():
         tags = flask.request.form.get("tags", "").split(",")
         file = flask.request.files.get("file")
 
-        if password != ADMIN_PASSWORD:
+        if encode(password) != ADMIN_PASSWORD:
             flask.flash("❌ Невірний пароль!")
             return flask.redirect(flask.url_for("admin"))
 
