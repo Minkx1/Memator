@@ -76,5 +76,53 @@
             "skebob",
             "bird"
         ]
+    },
+    {
+        "title": "Соціалізація",
+        "filename": "skromnik.jpg",
+        "tags": [
+            "соціалізація",
+            "socialization",
+            "scp",
+            "скромник"
+        ]
+    },
+    {
+        "title": "THATHAGEYO",
+        "filename": "thathageyo.jpg",
+        "tags": [
+            "aot",
+            "attack on titan",
+            "thathageyo",
+            "sasageyo",
+            "атака титанів",
+            "атака титанов",
+            "erwin",
+            "ервін"
+        ]
+    },
+    {
+        "title": "Homelander",
+        "filename": "homelander1.jpg",
+        "tags": [
+            "фуф",
+            "батьківщин",
+            "homelander",
+            "the boys",
+            "хлопці"
+        ]
+    },
+    {
+        "title": "Пуститися берега",
+        "filename": "jessy.jpg",
+        "tags": [
+            "джессі",
+            "яцйя",
+            "яєчка",
+            "містер вайт",
+            "хайзенберг",
+            "breaking bad",
+            "пуститися берега"
+        ]
     }
 ]
