@@ -7,7 +7,7 @@
             "ковбой",
             "western"
         ],
-        "visible": true
+        "visible": false
     },
     {
         "filename": "dog_programmer.jpg",
@@ -17,7 +17,7 @@
             "програміст",
             "it"
         ],
-        "visible": true
+        "visible": false
     },
     {
         "filename": "pepe.jpg",
@@ -27,7 +27,7 @@
             "pepe",
             "sad"
         ],
-        "visible": true
+        "visible": false
     },
     {
         "filename": "kozak.jpg",
@@ -41,7 +41,7 @@
             "like",
             "kozak like"
         ],
-        "visible": true
+        "visible": false
     },
     {
         "filename": "vitruk.jpg",
@@ -57,7 +57,7 @@
             "вітрук айдол",
             "єю айдол"
         ],
-        "visible": true
+        "visible": false
     },
     {
         "filename": "cat_with_foil_hat.jpg",
@@ -71,7 +71,7 @@
             "foil hat",
             "действия глупенькие"
         ],
-        "visible": true
+        "visible": false
     },
     {
         "title": "Скебоб",
@@ -82,7 +82,7 @@
             "skebob",
             "bird"
         ],
-        "visible": true
+        "visible": false
     },
     {
         "title": "Соціалізація",
@@ -93,7 +93,7 @@
             "scp",
             "скромник"
         ],
-        "visible": true
+        "visible": false
     },
     {
         "title": "THATHAGEYO",
@@ -120,7 +120,7 @@
             "the boys",
             "хлопці"
         ],
-        "visible": true
+        "visible": false
     },
     {
         "title": "Пуститися берега",
@@ -134,7 +134,7 @@
             "breaking bad",
             "пуститися берега"
         ],
-        "visible": true
+        "visible": false
     },
     {
         "title": "adad",
@@ -171,6 +171,14 @@
             "faces",
             "face"
         ],
-        "visible": true
+        "visible": false
+    },
+    {
+        "title": "adada",
+        "filename": "dog_programmer (1).jpg",
+        "tags": [
+            "adadad"
+        ],
+        "visible": false
     }
 ]

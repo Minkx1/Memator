@@ -24,6 +24,7 @@ def save_memes(memes):
         json.dump(memes, f, ensure_ascii=False, indent=4)
 
 MEMES = load_memes() # Глобально кешуємо
+
 # --- Routes ---
 @app.route("/", methods=["GET", "POST"])
 def home():
