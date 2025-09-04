@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+  <html lang="uk">
+    <head>
+    <meta charset="UTF-8">
+    <title>Керування мемами</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; background:#0f172a; color:#f1f5f9; text-align:center; padding:30px; }
+        .meme-list { max-width:600px; margin:0 auto; }
+        .meme-item { background:#1e293b; margin:10px 0; padding:12px 20px; border-radius:12px; display:flex; justify-content:space-between; align-items:center; }
+        .meme-item img { width:50px; height:50px; object-fit:cover; border-radius:8px; }
+        button { padding:10px 20px; border:none; border-radius:12px; background:#38bdf8; color:#0f172a; font-weight:bold; cursor:pointer; margin-top:15px; }
+        button:hover { background:#0ea5e9; }
+    </style>
+    </head>
+  <body>
+  <h1><a href="/" style="text-decoration: none; color: inherit;">Мематор</a></h1>
+  <h2>Адмін панель - керування мемами</h2>
+
+    <form method="post" class="meme-list">
+        {% for meme in memes %}
+        <div class="meme-item">
+            <div style="display:flex; align-items:center; gap:10px;">
+                <img src="{{ url_for('static', filename='memes/' + meme.filename) }}" alt="{{ meme.title }}">
+                <span>{{ meme.title }}</span>
+            </div>
+            <input type="checkbox" name="visible" value="{{ meme.filename }}" {% if meme.visible %}checked{% endif %}>
+        </div>
+        {% endfor %}
+        <button type="submit">Зберегти зміни</button>
+    </form>
+  </body>
+</html>

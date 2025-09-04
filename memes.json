@@ -6,7 +6,8 @@
             "кіт",
             "ковбой",
             "western"
-        ]
+        ],
+        "visible": true
     },
     {
         "filename": "dog_programmer.jpg",
@@ -15,7 +16,8 @@
             "пес",
             "програміст",
             "it"
-        ]
+        ],
+        "visible": true
     },
     {
         "filename": "pepe.jpg",
@@ -24,7 +26,8 @@
             "жаба",
             "pepe",
             "sad"
-        ]
+        ],
+        "visible": true
     },
     {
         "filename": "kozak.jpg",
@@ -37,7 +40,8 @@
             "козак лайк",
             "like",
             "kozak like"
-        ]
+        ],
+        "visible": true
     },
     {
         "filename": "vitruk.jpg",
@@ -52,7 +56,8 @@
             "айдол",
             "вітрук айдол",
             "єю айдол"
-        ]
+        ],
+        "visible": true
     },
     {
         "filename": "cat_with_foil_hat.jpg",
@@ -65,7 +70,8 @@
             "cat with foil hat",
             "foil hat",
             "действия глупенькие"
-        ]
+        ],
+        "visible": true
     },
     {
         "title": "Скебоб",
@@ -75,7 +81,8 @@
             "птиця",
             "skebob",
             "bird"
-        ]
+        ],
+        "visible": true
     },
     {
         "title": "Соціалізація",
@@ -85,7 +92,8 @@
             "socialization",
             "scp",
             "скромник"
-        ]
+        ],
+        "visible": true
     },
     {
         "title": "THATHAGEYO",
@@ -99,7 +107,8 @@
             "атака титанов",
             "erwin",
             "ервін"
-        ]
+        ],
+        "visible": false
     },
     {
         "title": "Homelander",
@@ -110,7 +119,8 @@
             "homelander",
             "the boys",
             "хлопці"
-        ]
+        ],
+        "visible": true
     },
     {
         "title": "Пуститися берега",
@@ -123,6 +133,32 @@
             "хайзенберг",
             "breaking bad",
             "пуститися берега"
-        ]
+        ],
+        "visible": true
+    },
+    {
+        "title": "adad",
+        "filename": "pipka.jpg",
+        "tags": [
+            "adad"
+        ],
+        "visible": false
+    },
+    {
+        "title": "Memchikas",
+        "filename": "boberchik_vojaka.jpg",
+        "tags": [
+            "awdawd"
+        ],
+        "visible": false
+    },
+    {
+        "title": "testik1488",
+        "filename": "hand.png",
+        "tags": [
+            "sbiabrlvbaiuv;ribv",
+            "dog"
+        ],
+        "visible": false
     }
 ]

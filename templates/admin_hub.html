@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<title>Мематор — Адмін панель</title>
+<link rel="icon" type="image/png" href="{{ url_for('static', filename='favicon.png') }}">
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: linear-gradient(180deg, #0f172a, #1e293b);
+    color: #f1f5f9;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+header h1 {
+    font-size: 36px;
+    color: #38bdf8;
+    margin-bottom: 5px;
+}
+
+header p {
+    font-size: 16px;
+    color: #94a3b8;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.button-container a {
+    text-decoration: none;
+    text-align: center;
+    padding: 15px 30px;
+    border-radius: 12px;
+    background: #38bdf8;
+    color: #0f172a;
+    font-weight: bold;
+    font-size: 18px;
+    transition: background 0.2s, transform 0.2s;
+}
+
+.button-container a:hover {
+    background: #0ea5e9;
+    transform: scale(1.05);
+}
+
+@media (max-width: 520px) {
+    .button-container a {
+        font-size: 16px;
+        padding: 12px 25px;
+    }
+}
+</style>
+</head>
+<body>
+<header>
+    <h1><a href="/" style="color:#38bdf8; text-decoration:none;">Мематор</a></h1>
+    <p>Адмін панель</p>
+</header>
+
+<div class="button-container">
+    <a href="/admin/add">Створити мем</a>
+    <a href="/admin/manage">Контроль мемів</a>
+</div>
+</body>
+</html>
