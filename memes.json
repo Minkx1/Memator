@@ -7,7 +7,7 @@
             "ковбой",
             "western"
         ],
-        "visible": false
+        "visible": true
     },
     {
         "filename": "dog_programmer.jpg",
@@ -17,7 +17,7 @@
             "програміст",
             "it"
         ],
-        "visible": false
+        "visible": true
     },
     {
         "filename": "pepe.jpg",
@@ -27,7 +27,7 @@
             "pepe",
             "sad"
         ],
-        "visible": false
+        "visible": true
     },
     {
         "filename": "kozak.jpg",
@@ -41,7 +41,7 @@
             "like",
             "kozak like"
         ],
-        "visible": false
+        "visible": true
     },
     {
         "filename": "vitruk.jpg",
@@ -57,7 +57,7 @@
             "вітрук айдол",
             "єю айдол"
         ],
-        "visible": false
+        "visible": true
     },
     {
         "filename": "cat_with_foil_hat.jpg",
@@ -71,7 +71,7 @@
             "foil hat",
             "действия глупенькие"
         ],
-        "visible": false
+        "visible": true
     },
     {
         "title": "Скебоб",
@@ -82,7 +82,7 @@
             "skebob",
             "bird"
         ],
-        "visible": false
+        "visible": true
     },
     {
         "title": "Соціалізація",
@@ -93,7 +93,7 @@
             "scp",
             "скромник"
         ],
-        "visible": false
+        "visible": true
     },
     {
         "title": "THATHAGEYO",
@@ -120,7 +120,7 @@
             "the boys",
             "хлопці"
         ],
-        "visible": false
+        "visible": true
     },
     {
         "title": "Пуститися берега",
@@ -134,7 +134,7 @@
             "breaking bad",
             "пуститися берега"
         ],
-        "visible": false
+        "visible": true
     },
     {
         "title": "adad",
@@ -171,7 +171,7 @@
             "faces",
             "face"
         ],
-        "visible": false
+        "visible": true
     },
     {
         "title": "adada",

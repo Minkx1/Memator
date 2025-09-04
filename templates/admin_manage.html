@@ -125,17 +125,18 @@
             <input type="password" name="password" placeholder="Пароль" required>
             {% if memes %}
             <div class="meme-list">
-                {% for meme in memes %}
-                <div class="meme-item">
-                    <div style="display:flex; align-items:center; gap:10px;">
-                        <img src="{{ url_for('static', filename='memes/' + meme.filename) }}" alt="{{ meme.title }}">
-                        <span>{{ meme.title }}</span>
-                    </div>
-                    <div>
-                        <input type="checkbox" id="visible_{{ meme.filename }}" name="visible" value="{{ meme.filename }}" {% if meme.visible %}checked{% endif %}>
-                        <label for="visible_{{ meme.filename }}"></label>
-                    </div>
-                </div>
+                {% for meme in memes %} 
+                <div class="meme-item"> 
+                  <div style="display:flex; align-items:center; gap:10px;"> 
+                    <img src="{{ url_for('static', filename='memes/' + meme.filename) }}" alt="{{ meme.title }}"> 
+                    <span>{{ meme.title }}</span> 
+                  </div> 
+                  <div> 
+                    <input type="checkbox" id="visible_{{ meme.filename }}" name="visible_{{ meme.filename }}" 
+                    {% if meme.visible %}checked{% endif %}> 
+                    <label for="visible_{{ meme.filename }}"></label> 
+                  </div> 
+                </div> 
                 {% endfor %}
             </div>
             <button type="submit">Зберегти зміни</button>

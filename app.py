@@ -117,7 +117,6 @@ def admin_add():
 
 @app.route("/admin/manage", methods=["GET", "POST"])
 def admin_manage():
-    global MEMES
     memes = load_memes()
 
     if flask.request.method == "POST":
@@ -132,9 +131,10 @@ def admin_manage():
             m["visible"] = checkbox_name in flask.request.form
 
         save_memes(memes)
-        MEMES[:] = load_memes()
+        global MEMES
+        MEMES = load_memes()
         flask.flash("✅ Налаштування мемів оновлено!")
-        return flask.redirect(flask.url_for("admin_manage"))
+        return flask.render_template("admin_manage.html", memes=memes)
 
     return flask.render_template("admin_manage.html", memes=memes)
 
