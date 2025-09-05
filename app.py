@@ -1,47 +1,11 @@
-import flask, json, os, hashlib, requests, base64
+import flask, json, os, hashlib
 import rapidfuzz.fuzz
-from dotenv import load_dotenv
 
 # --- Config ---
-load_dotenv()
+MEMES_FILE = "memes.json"
+UPLOAD_FOLDER = "static/memes"
 ADMIN_PASSWORD = os.environ.get("ADMIN_PASSWORD_HASH") or "4a58953f9be61a1b54ff79b686507c308df4de956ab7b46e63d2d373ade79d8e"
 SECRET_KEY = "super-secret-key"
-UPLOAD_FOLDER = "static/memes"
-GITHUB_REPO = "Minkx1/Memator"
-GITHUB_BRANCH = "main"
-GITHUB_TOKEN = os.environ.get("GITHUB_TOKEN")
-
-if not GITHUB_TOKEN:
-    raise RuntimeError("❌ GITHUB_TOKEN is not set in environment variables!")
-
-def github_get_file(path):
-    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{path}?ref={GITHUB_BRANCH}"
-    r = requests.get(url, headers={"Authorization": f"token {GITHUB_TOKEN}"})
-    r.raise_for_status()
-    data = r.json()
-    return json.loads(base64.b64decode(data["content"]).decode("utf-8"))
-
-def github_save_file(path, content, message="update file", binary=False):
-    url = f"https://api.github.com/repos/{GITHUB_REPO}/contents/{path}"
-    headers = {"Authorization": f"token {GITHUB_TOKEN}"}
-
-    # SHA існуючого файлу
-    r = requests.get(url, headers=headers)
-    sha = r.json()["sha"] if r.status_code == 200 else None
-
-    if binary:  # вже готові байти
-        encoded = base64.b64encode(content).decode("utf-8")
-    else:       # текст (json, md, html і т.д.)
-        encoded = base64.b64encode(content.encode("utf-8")).decode("utf-8")
-
-    payload = {"message": message, "content": encoded, "branch": GITHUB_BRANCH}
-    if sha:
-        payload["sha"] = sha
-
-    r = requests.put(url, headers=headers, json=payload)
-    r.raise_for_status()
-    return r.json()
-
 
 # --- Flask ---
 app = flask.Flask(__name__)
@@ -52,10 +16,12 @@ def encode(password: str) -> str:
     return hashlib.sha256(password.encode()).hexdigest()
 
 def load_memes():
-    return github_get_file("memes.json")
+    with open("memes.json", "r", encoding="utf-8") as f:
+        return json.load(f)
 
 def save_memes(memes):
-    github_save_file("memes.json", json.dumps(memes, ensure_ascii=False, indent=4))
+    with open(MEMES_FILE, "w", encoding="utf-8") as f:
+        json.dump(memes, f, ensure_ascii=False, indent=4)
 
 MEMES = load_memes() # Глобально кешуємо
 
@@ -131,8 +97,7 @@ def admin_add():
 
         # Збереження картинки
         filename = file.filename
-        file_bytes = file.read()
-        github_save_file(f"{UPLOAD_FOLDER}/{filename}", file_bytes, message=f"add {filename}", binary=True)
+        file.save(os.path.join(UPLOAD_FOLDER, filename))
 
         # Додаємо новий мем у JSON
         memes = load_memes()
@@ -143,8 +108,7 @@ def admin_add():
             "visible": True
         })
         save_memes(memes)
-        MEMES.clear()
-        MEMES.extend(load_memes())
+        MEMES[:] = load_memes()
 
         flask.flash("✅ Мем успішно додано!")
         return flask.redirect(flask.url_for("home"))
@@ -168,9 +132,7 @@ def admin_manage():
 
         save_memes(memes)
         global MEMES
-        MEMES.clear()
-        MEMES.extend(load_memes())
-        
+        MEMES = load_memes()
         flask.flash("✅ Налаштування мемів оновлено!")
         return flask.render_template("admin_manage.html", memes=memes)
 
