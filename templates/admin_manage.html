@@ -128,12 +128,12 @@
                 {% for meme in memes %} 
                 <div class="meme-item"> 
                   <div style="display:flex; align-items:center; gap:10px;"> 
-                    <img src="{{ url_for('static', filename='memes/' + meme.filename) }}" alt="{{ meme.title }}"> 
+                    <img src="{{ url_for('static', filename='memes/' + meme['filename']) }}" alt="{{ meme['title'] }}">
                     <span>{{ meme.title }}</span> 
                   </div> 
                   <div> 
-                    <input type="checkbox" id="visible_{{ meme.filename }}" name="visible_{{ meme.filename }}" 
-                    {% if meme.visible %}checked{% endif %}> 
+                    <input type="checkbox" id="visible_{{ meme['filename'] }}" name="visible_{{ meme['filename'] }}" 
+                    {% if meme['visible'] %}checked{% endif %}>
                     <label for="visible_{{ meme.filename }}"></label> 
                   </div> 
                 </div> 

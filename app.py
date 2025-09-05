@@ -29,6 +29,7 @@ MEMES = load_memes() # Глобально кешуємо
 @app.route("/", methods=["GET", "POST"])
 def home():
     return flask.render_template("home.html")
+
 @app.route("/api/get_memes", methods=["GET"])
 def get_memes():
     query = flask.request.args.get("query", "").strip().lower()
@@ -137,6 +138,31 @@ def admin_manage():
         return flask.render_template("admin_manage.html", memes=memes)
 
     return flask.render_template("admin_manage.html", memes=memes)
+
+@app.route("/admin/download_archive")
+def download_archive():
+    import io, zipfile
+    
+    # створюємо in-memory zip
+    mem_zip = io.BytesIO()
+    with zipfile.ZipFile(mem_zip, mode="w") as zf:
+        # додаємо memes.json
+        zf.write(MEMES_FILE, arcname="memes.json")
+
+        # додаємо всі файли з папки UPLOAD_FOLDER
+        for root, dirs, files in os.walk(UPLOAD_FOLDER):
+            for file in files:
+                path = os.path.join(root, file)
+                # додаємо у zip без шляху до static/
+                zf.write(path, arcname=os.path.join("memes", file))
+
+    mem_zip.seek(0)
+    return flask.send_file(
+        mem_zip,
+        mimetype="application/zip",
+        as_attachment=True,
+        download_name="memes_archive.zip"
+    )
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 5000))
