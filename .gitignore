@@ -3,3 +3,4 @@ TempCodeRunner.py
 .idea/
 static/memes/
 memes.json.env
+.env
