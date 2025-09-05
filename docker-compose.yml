@@ -2,7 +2,8 @@ version: "3"
 services:
   web:
     build: .
-    env_file:
-      - .env
     ports:
       - "5000:5000"
+    volumes:
+      - ./memes.json:/app/memes.json
+      - ./static/memes:/app/static/memes
