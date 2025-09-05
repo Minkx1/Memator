@@ -2,4 +2,4 @@ TempCodeRunner.py
 .venv/
 .idea/
 static/memes/
-memes.json
+memes.json.env
